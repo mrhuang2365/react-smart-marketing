@@ -1,26 +1,58 @@
 import React from 'react';
 import logo from './logo.svg';
+import 'antd/dist/antd.css';
 import './App.css';
+import { Route, Switch, Redirect, Router} from 'react-router-dom'
+import { createHashHistory } from 'history';
+import {Layout} from 'antd'
+import Home from './pages/home';
+import Edit from './pages/edit';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const { Header, Footer, Sider, Content } = Layout;
+
+
+export const hashHistory = createHashHistory({ basename: '/' });
+
+interface IProps {
+  // route: string,
+  // match: any,
+}
+interface IState{
+  route: string,
+}
+class App extends React.Component<IProps, IState>{
+  constructor(props:IProps){
+    super(props)
+    this.state = {
+      route: window.location.hash.substr(1)
+    }
+  }
+  render(){
+    return (
+      <Layout className="App">
+        <Header className="App-header">
+          基于react实现的任务导向流
+        </Header>
+        <Layout>
+          <Sider className="App-sider">Sider</Sider>
+          <Content className="App-content">
+            <Router history={hashHistory}>
+              <Switch>
+                <Route path="/home" component={Home}/>
+                <Route path="/edit" component={Edit}/>
+                <Redirect from="/" to="/home" />
+                <Route
+                render={() => {
+                  return <div className="container">not found</div>;
+                }}
+              />
+              </Switch>
+            </Router>
+          </Content>
+        </Layout>
+      </Layout>
+    );
+  }
 }
 
 export default App;

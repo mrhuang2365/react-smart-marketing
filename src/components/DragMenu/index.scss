@@ -1,0 +1,13 @@
+.Drag-menu{
+  width: 120px;
+  height: auto;
+  min-height: 250px;
+  border-radius: 20px;
+  border: 1px solid #3ba0e9;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+  cursor: move;
+}
