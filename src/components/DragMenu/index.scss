@@ -1,13 +1,25 @@
-.Drag-menu{
+.drag-menu{
   width: 120px;
   height: auto;
   min-height: 250px;
-  border-radius: 20px;
-  border: 1px solid #3ba0e9;
+  border-radius: 8px;
+  border: 1px solid #b1cde0;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+}
+.drag-menu-handler{
   cursor: move;
+  border-bottom: 1px solid #ccc;
+  padding: 4px 0;
+}
+.drag-menu-content{
+  flex:1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 8px 2px;
 }

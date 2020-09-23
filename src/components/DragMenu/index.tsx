@@ -1,8 +1,8 @@
 import React from 'react';
 import './index.scss'
-import {Layout} from 'antd'
+import {MenuOutlined} from '@ant-design/icons'
 
-const { Header, Footer, Sider, Content } = Layout;
+import WidgetList from '../WidgetList'
 
 interface IProps {
   // route: string,
@@ -13,7 +13,11 @@ interface IState{
   offsetY: number,
   x: number,
   y: number,
+  drag: boolean,
 }
+const DRAG_MENU = 'drag-menu';
+const DRAG_MENU_HANDLER = 'drag-menu-handler';
+
 class App extends React.Component<IProps, IState>{
   constructor(props:IProps){
     super(props)
@@ -22,6 +26,7 @@ class App extends React.Component<IProps, IState>{
       offsetY: 0,
       x: 100,
       y: 100,
+      drag: false
     }
   }
   private get getStyle(){
@@ -30,47 +35,53 @@ class App extends React.Component<IProps, IState>{
       left: this.state.x + 'px',
     }
   }
-  onDragStart(e:any){
-    console.log('onDragStart, event:',  e.nativeEvent);
-  }
-  onDragEnd(e:any){
-    console.log('onDragEnd, event:', e.nativeEvent, e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  onMouseDown(e:any) {
+    console.log('-----onMouseDown:', e)
     e.preventDefault();
-    const x = e.nativeEvent.offsetX + this.state.x - this.state.offsetX;
-    const y = e.nativeEvent.offsetY + this.state.y - this.state.offsetY;
+    this.setState({
+      offsetX: e.nativeEvent.offsetX,
+      offsetY: e.nativeEvent.offsetY,
+      drag: true,
+    })
+    document.addEventListener('mousemove', this.bindMouseMove)
+    document.addEventListener('mouseup', this.bindMouseUp)
+  }
+  onMouseUp(e:any){
+    e.preventDefault();
+    document.removeEventListener('mousemove', this.bindMouseMove)
+    document.removeEventListener('mouseup', this.bindMouseUp)
+  }
+  onMouseMove(e:any){
+    e.preventDefault();
+    console.log('----onMouseMove:', e)
+    const isDragMenuEle = e.target.classList.contains(DRAG_MENU_HANDLER);
+    let x = this.state.x;
+    let y = this.state.y;
+    if (isDragMenuEle) {
+      x = e.offsetX + this.state.x - this.state.offsetX;
+      y = e.offsetY + this.state.y - this.state.offsetY;
+    } else {
+      x = e.offsetX - this.state.offsetX;
+      y = e.offsetY - this.state.offsetY;
+    }
+    
     this.setState({
       x: Math.max(x, 0),
       y: Math.max(y, 0),
     })
   }
-  onDrag(e: any) {
-    // console.log('onDrag, event:', e.nativeEvent, e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    e.preventDefault();
-    // const x = e.nativeEvent.offsetX + this.state.x - this.state.x;
-    // const y = e.nativeEvent.offsetY + this.state.y - this.state.y;
-    // this.setState({
-    //   x: Math.max(x, 0),
-    //   y: Math.max(y, 0),
-    // })
-  }
-  onMouseDown(e:any) {
-    console.log('onMouseDown, event:', e.nativeEvent, e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    // e.preventDefault();
-    this.setState({
-      offsetX: e.nativeEvent.offsetX,
-      offsetY: e.nativeEvent.offsetY,
-    })
-  }
+  private bindMouseMove = this.onMouseMove.bind(this);
+  private bindMouseUp = this.onMouseUp.bind(this);
+
   render(){
     return (
-      <div className="Drag-menu" style={this.getStyle} 
-      draggable="true"
-      onDrag = {(e) => this.onDrag(e)}
-      onMouseDown= {(e) => this.onMouseDown(e)}
-      onDragStart = {(e) => this.onDragStart(e)}
-      onDragEnd = {(e) => this.onDragEnd(e)}
-      >
-        菜单栏
+      <div className={DRAG_MENU} style={this.getStyle}>
+        <div className={DRAG_MENU_HANDLER} onMouseDown= {(e) => this.onMouseDown(e)}>
+          <MenuOutlined />
+        </div>
+        <div className="drag-menu-content">
+          <WidgetList />
+        </div>
       </div>
     );
   }
