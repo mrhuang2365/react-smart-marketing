@@ -1,9 +1,9 @@
 import React from 'react';
 import './index.scss'
 import {MenuOutlined} from '@ant-design/icons'
-
 import WidgetList from '../WidgetList'
-
+import {Rnd} from 'react-rnd'
+console.log('---Rnd', Rnd)
 interface IProps {
   // route: string,
   // match: any,
@@ -36,7 +36,8 @@ class App extends React.Component<IProps, IState>{
     }
   }
   onMouseDown(e:any) {
-    console.log('-----onMouseDown:', e)
+    let style = window.getComputedStyle(e.target);
+    console.log('-----onMouseDown:', e.nativeEvent, style);
     e.preventDefault();
     this.setState({
       offsetX: e.nativeEvent.offsetX,
@@ -75,14 +76,18 @@ class App extends React.Component<IProps, IState>{
 
   render(){
     return (
-      <div className={DRAG_MENU} style={this.getStyle}>
-        <div className={DRAG_MENU_HANDLER} onMouseDown= {(e) => this.onMouseDown(e)}>
-          <MenuOutlined />
+      // <Rnd>
+        <div className={DRAG_MENU} style={this.getStyle}>
+          <div className={DRAG_MENU_HANDLER} 
+          onMouseDown= {(e) => this.onMouseDown(e)}
+          >
+            <MenuOutlined />
+          </div>
+          <div className="drag-menu-content">
+            <WidgetList />
+          </div>
         </div>
-        <div className="drag-menu-content">
-          <WidgetList />
-        </div>
-      </div>
+      // </Rnd>
     );
   }
 }
