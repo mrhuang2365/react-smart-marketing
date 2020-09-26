@@ -37,8 +37,9 @@ class App extends React.Component<IProps, IState>{
   onMouseDown(e:any) {
     const disX = e.clientX - this.state.x;
     const disY = e.clientY - this.state.y;
-  
+    
     document.onmousemove = (ov) => {
+      // console.log('onmousemove:', ov.clientX,ov.clientY, ov);
       const x = ov.clientX - disX;
       const y = ov.clientY - disY;
       this.setState({

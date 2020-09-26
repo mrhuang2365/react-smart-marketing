@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import 'antd/dist/antd.css';
 import './App.css';
 import { Route, Switch, Redirect, Router} from 'react-router-dom'
@@ -30,26 +29,24 @@ class App extends React.Component<IProps, IState>{
   render(){
     return (
       <Layout className="App">
-        <Header className="App-header">
+        {/* <Header className="App-header">
           基于react实现的任务导向流
-        </Header>
-        <Layout>
-          <Sider className="App-sider">Sider</Sider>
-          <Content className="App-content">
-            <Router history={hashHistory}>
-              <Switch>
-                <Route path="/home" component={Home}/>
-                <Route path="/edit" component={Edit}/>
-                <Redirect from="/" to="/home" />
-                <Route
-                render={() => {
-                  return <div className="container">not found</div>;
-                }}
-              />
-              </Switch>
-            </Router>
-          </Content>
-        </Layout>
+        </Header> */}
+        {/* <Sider className="App-sider">Sider</Sider> */}
+        <Content className="App-content">
+          <Router history={hashHistory}>
+            <Switch>
+              <Route path="/home" component={Home}/>
+              <Route path="/edit" component={Edit}/>
+              <Redirect from="/" to="/home" />
+              <Route
+              render={() => {
+                return <div className="container">not found</div>;
+              }}
+            />
+            </Switch>
+          </Router>
+        </Content>
       </Layout>
     );
   }
