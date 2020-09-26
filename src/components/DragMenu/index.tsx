@@ -2,8 +2,7 @@ import React from 'react';
 import './index.scss'
 import {MenuOutlined} from '@ant-design/icons'
 import WidgetList from '../WidgetList'
-import {Rnd} from 'react-rnd'
-console.log('---Rnd', Rnd)
+
 interface IProps {
   // route: string,
   // match: any,
@@ -36,47 +35,25 @@ class App extends React.Component<IProps, IState>{
     }
   }
   onMouseDown(e:any) {
-    let style = window.getComputedStyle(e.target);
-    console.log('-----onMouseDown:', e.nativeEvent, style);
-    e.preventDefault();
-    this.setState({
-      offsetX: e.nativeEvent.offsetX,
-      offsetY: e.nativeEvent.offsetY,
-      drag: true,
-    })
-    document.addEventListener('mousemove', this.bindMouseMove)
-    document.addEventListener('mouseup', this.bindMouseUp)
-  }
-  onMouseUp(e:any){
-    e.preventDefault();
-    document.removeEventListener('mousemove', this.bindMouseMove)
-    document.removeEventListener('mouseup', this.bindMouseUp)
-  }
-  onMouseMove(e:any){
-    e.preventDefault();
-    console.log('----onMouseMove:', e)
-    const isDragMenuEle = e.target.classList.contains(DRAG_MENU_HANDLER);
-    let x = this.state.x;
-    let y = this.state.y;
-    if (isDragMenuEle) {
-      x = e.offsetX + this.state.x - this.state.offsetX;
-      y = e.offsetY + this.state.y - this.state.offsetY;
-    } else {
-      x = e.offsetX - this.state.offsetX;
-      y = e.offsetY - this.state.offsetY;
-    }
-    
-    this.setState({
-      x: Math.max(x, 0),
-      y: Math.max(y, 0),
-    })
-  }
-  private bindMouseMove = this.onMouseMove.bind(this);
-  private bindMouseUp = this.onMouseUp.bind(this);
+    const disX = e.clientX - this.state.x;
+    const disY = e.clientY - this.state.y;
+  
+    document.onmousemove = (ov) => {
+      const x = ov.clientX - disX;
+      const y = ov.clientY - disY;
+      this.setState({
+        x: Math.max(x, 0),
+        y: Math.max(y, 0),
+      })
 
+    }
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
+  }
   render(){
     return (
-      // <Rnd>
         <div className={DRAG_MENU} style={this.getStyle}>
           <div className={DRAG_MENU_HANDLER} 
           onMouseDown= {(e) => this.onMouseDown(e)}
@@ -87,7 +64,6 @@ class App extends React.Component<IProps, IState>{
             <WidgetList />
           </div>
         </div>
-      // </Rnd>
     );
   }
 }
