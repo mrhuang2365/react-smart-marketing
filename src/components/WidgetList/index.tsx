@@ -1,12 +1,7 @@
 import React from 'react';
 import './index.scss'
-import { Menu } from 'antd'
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { AppstoreOutlined } from '@ant-design/icons';
 import {widgetList} from '../../widgets'
-
-console.log('----1', widgetList)
-
-const { SubMenu } = Menu;
 
 interface IProps {
   // route: string,
@@ -25,9 +20,7 @@ class WidgetList extends React.Component<IProps, IState>{
   onDragStart(e: any, cmpt: object){
     console.log('onDragStart:', cmpt, e);
     e.dataTransfer.setData('cmpt-info', JSON.stringify(cmpt));
-  }
-  onDrag(e: any, cmpt: object){
-    console.log('onDrag:', cmpt, e)
+    e.dataTransfer.setData('mode', 'add');
   }
   render(){
     return (
@@ -46,7 +39,6 @@ class WidgetList extends React.Component<IProps, IState>{
                       return (
                         <div className="cmpt-item" key={child.id} draggable="true" 
                           onDragStart= {(e) => this.onDragStart(e, child)}
-                          // onDrag={(e) => this.onDrag(e, child)}
                           >
                           <AppstoreOutlined className="icon"/>
                           <span>{child.name}</span>

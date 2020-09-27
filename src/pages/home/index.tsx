@@ -23,8 +23,16 @@ class HomePage extends React.Component<IProps, IState> {
   }
   onDrop(e: any) {
     const data = JSON.parse(e.dataTransfer.getData('cmpt-info') || 'null');
-    console.log('onDrog, ', e.clientX, e.clientY, data);
-    this.task.newNode(e.clientX,  e.clientY, data);
+    const offset = JSON.parse(e.dataTransfer.getData('offset') || 'null');
+    const mode = e.dataTransfer.getData('mode') || 'add';
+    console.log('onDrog, ', e.clientX, e.clientY, mode, data, e.nativeEvent);
+    const x = e.clientX;
+    const y = e.clientY;
+    if (mode === 'add') {
+      this.task.newNode(x - 30, y - 30, data);
+    } else if (mode === 'move') {
+      this.task.setNodePostion(data.id, x - offset.x, y - offset.y)
+    }
     this.setState({
       nodeList: this.task.getNodeList()
     })
@@ -36,7 +44,7 @@ class HomePage extends React.Component<IProps, IState> {
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
           <DragMenu></DragMenu>
-          <NodeList task={this.task} nodeList={this.state.nodeList}/>
+          <NodeList task={this.task} nodeList={this.state.nodeList} />
       </div>
     );
   }

@@ -21,7 +21,6 @@ class WidgetList extends React.Component<IProps, IState>{
   render(){
     return (
       <div className='nodes-content'>
-        {this.props.task.rootId}
         { 
           this.props.nodeList.map((node: INode, index) => {
            return (

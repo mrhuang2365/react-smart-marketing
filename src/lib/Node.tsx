@@ -28,4 +28,8 @@ interface INodeOptions {
      this.widget = options.widget;
    }
 
+   setPosition(x:number, y:number){
+     this.x = x;
+     this.y = y;
+   }
  }
