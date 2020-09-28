@@ -13,7 +13,7 @@ export default class Task{
     [index: string]: Node
   } = {};
   state: {
-    selectId: number | null
+    selectId: number
   };
   
 
@@ -25,7 +25,7 @@ export default class Task{
     this.nodes = {};
 
     this.state = {
-      selectId: null
+      selectId: 0
     };
     window.$$task = this;
   }
@@ -47,6 +47,7 @@ export default class Task{
     this.nodes[id].setPosition(x, y);
   }
   selectNode(id:number) {
+    console.log('Task, selectNode ==> id:', id)
     this.state.selectId = id;
   }
 }

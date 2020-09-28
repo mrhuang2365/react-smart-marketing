@@ -10,7 +10,10 @@
     "downlevelIteration": true,
     "moduleResolution": "node",
     "jsx": "preserve",
-    "lib": ["es2015", "dom"],
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -19,17 +22,19 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"],
-    "baseUrl": "./",
-    "paths": {
-      "src/*": ["src/*"],
-      "assets/*": ["src/assets/*"],
-      "common/*": ["src/common/*"],
-      "pages/*": ["src/pages/*"],
-      "utils/*": ["src/utils/*"],
-      "components/*": ["src/components/*"]
-    }
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ],
+    "baseUrl": "./"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".imflow"]
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".imflow"
+  ]
 }
