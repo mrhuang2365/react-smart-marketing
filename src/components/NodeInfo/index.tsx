@@ -34,29 +34,20 @@ class WidgetList extends React.Component<IProps, IState>{
     e.dataTransfer.setData('offset', JSON.stringify({x: e.nativeEvent.layerX, y:  e.nativeEvent.layerY}));
     e.dataTransfer.setData('mode', 'move');
   }
-  iconDragStart(e:any){
+  onMouseDown(e:any){
     console.log('iconDragStart:', e.nativeEvent.layerX, e.nativeEvent.layerY, this.props.node, );
     e.preventDefault();
     this.setState({
       draggable: false,
     })
-    // document.onmousemove = (ov) => {
-    //   console.log('-------', ov.clientX, ov.clientY)
-    // }
-    // document.onmouseup = () => {
-    //   document.onmousemove = null;
-    //   document.onmouseup = null;
-    // }
+    document.onmousemove = (ov) => {
+      console.log('-------', ov.clientX, ov.clientY);
+    }
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
   }
-  onDrop(e: any) {
-    console.log('--------onDrog, ', e.clientX, e.clientY);
-    const x = e.clientX;
-    const y = e.clientY;
-  }
-  ondragover(e: any) {
-    e.preventDefault();
-  }
-  
   render(){
     return (
       <div className={`node-content ${this.props.className}`} style={this.style}
@@ -65,11 +56,7 @@ class WidgetList extends React.Component<IProps, IState>{
       onDragStart= {(e) => this.onDragStart(e)}>
         <AppstoreOutlined className="icon" />
         <RightSquareOutlined className="line-icon" 
-            // draggable="true" 
-            // onDragStart={(e) => this.iconDragStart(e)} 
-            // onDrop={(e) => this.onDrop(e)} 
-            // onDragOver={this.ondragover}
-            onMouseDown={(e) => this.iconDragStart(e)}
+            onMouseDown={(e) => this.onMouseDown(e)}
             />
         <div className="node-name">{this.props.node.name}</div>
       </div>

@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import './index.scss';
-import DragMenu from '../../components/DragMenu';
 import Task from '../../lib/Task';
-import NodeList from '../../components/NodeList'
 import { INode } from 'src/types/task';
+
+import NodeList from '../../components/NodeList'
+import DragMenu from '../../components/DragMenu';
+import SvgMap from '../../components/SvgMap';
+
 
 interface IProps {
   
@@ -45,6 +48,7 @@ class HomePage extends React.Component<IProps, IState> {
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
           <DragMenu></DragMenu>
           <NodeList task={this.task} nodeList={this.state.nodeList} />
+          <SvgMap task={this.task} nodeList={this.state.nodeList}/>
       </div>
     );
   }

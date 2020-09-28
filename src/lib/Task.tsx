@@ -1,4 +1,5 @@
 import Node from './Node';
+import Line from './Line';
 
 /**
  * Task任务类
@@ -9,8 +10,12 @@ export default class Task{
   rootId: number;
   version: number;
   nodeList: Node[];
+  lineList: Line[];
   nodes: {
     [index: string]: Node
+  } = {};
+  lines: {
+    [index: string]: Line
   } = {};
   state: {
     selectId: number
@@ -22,7 +27,9 @@ export default class Task{
     this.rootId = 1;
     this.version = 1;
     this.nodeList = [];
+    this.lineList = [];
     this.nodes = {};
+    this.lines = {};
 
     this.state = {
       selectId: 0
@@ -39,6 +46,9 @@ export default class Task{
   }
   getNodeList(){
     return this.nodeList;
+  }
+  getLineList(){
+    return this.lineList;
   }
   setNodePostion(id:number, x:number, y:number){
     if (!id || typeof(this.nodes[id]) === 'undefined') {

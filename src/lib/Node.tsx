@@ -17,6 +17,7 @@ interface INodeOptions {
     x: number;
     y: number;
     widget: any;
+    options: INodeOptions;
 
    constructor(id: number, options: INodeOptions) {
      console.log('Node， options:', options);
@@ -24,6 +25,7 @@ interface INodeOptions {
      this.id = id;
      this.x = options.x;
      this.y = options.y;
+     this.options = options;
      this.name = options.widget.name;
      this.widget = options.widget;
    }
