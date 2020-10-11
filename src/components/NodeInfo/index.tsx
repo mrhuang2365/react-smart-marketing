@@ -1,15 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './index.scss'
 import { AppstoreOutlined, RightSquareOutlined } from '@ant-design/icons';
 import { INode, ITask } from 'src/types/task';
-import {dragEventMode} from '../../lib/Task'
+import {dragEventMode } from '../../lib/Task'
+import {guideLineChange} from 'src/store/actions'
+import {ReduxState} from 'src/store/index'
 
 interface IProps {
   node: INode,
   task: ITask,
   className?: string,
-  onSelect?:() => void;
-  onLineMove?: Function;
+  // guideLineChange: Function,
+  // guideLinePath: GuideLinePath
 }
 interface IState{
   node: INode,
@@ -54,9 +57,9 @@ class NodeInfo extends React.Component<IProps, IState>{
     const mode = e.dataTransfer.getData('mode');
     console.log('Icon, onDrop:',data, mode, this.props.node.id);
     if (mode === dragEventMode.line) {
-     
+      // this.props.guideLineChange({x1:0,x2:0,y1:0, y2:0});
+      e.stopPropagation();
     }
-    e.stopPropagation();
   }
   onIconDrag(e:any){
     console.log('Icon, onIconDrag:', e.clientX, e.clientY);
@@ -66,8 +69,8 @@ class NodeInfo extends React.Component<IProps, IState>{
       x2: e.clientX,
       y2: e.clientY,
     };
-    this.props.task.setState( 'guideLinePath', value );
-    this.props.onLineMove && this.props.onLineMove(value);
+    this.props.task.setState('guideLinePath', value );
+    // this.props.guideLineChange(value)
   }
   stopPropagation(e:any){
     e.preventDefault();
@@ -80,7 +83,6 @@ class NodeInfo extends React.Component<IProps, IState>{
     return (
       <div className={`node-content ${this.props.className}`} style={this.style}
       draggable={this.state.draggable} 
-      onClick={() => this.props.onSelect && this.props.onSelect()}
       onDragStart= {(e) => this.onDragStart(e)}>
         <AppstoreOutlined className="icon" />
         <RightSquareOutlined className="line-icon"
@@ -89,10 +91,23 @@ class NodeInfo extends React.Component<IProps, IState>{
             onDrag = {(e) => this.onIconDrag(e)}
             onDrop = {(e) => this.onDrop(e)}
             />
-        <div className="node-name">{this.props.node.name}</div>
+        <div className="node-name">{this.props.node.name}{this.props.node.x}</div>
       </div>
     );
   }
 }
 
-export default NodeInfo;
+const mapStateToProps = (state: ReduxState) => ({
+  // guideLinePath: state.indexReducer.guideLinePath
+})
+
+const mapDispatchToProps = ({
+  guideLineChange: guideLineChange,
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NodeInfo);
+
+// export default NodeInfo

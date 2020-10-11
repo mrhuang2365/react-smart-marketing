@@ -1,19 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './index.scss';
-import Task,{dragEventMode, GuideLinePath} from '../../lib/Task';
+import Task,{dragEventMode} from '../../lib/Task';
 import { INode, ILine } from 'src/types/task';
+import {ReduxState} from 'src/store/index'
+import {updateNodeList} from 'src/store/actions'
 
 import NodeList from '../../components/NodeList'
 import DragMenu from '../../components/DragMenu';
 import SvgMap from '../../components/SvgMap';
 
 interface IProps {
-  
+  updateNodeList: Function
 }
 interface IState{
   nodeList: INode[],
   lineList: ILine[],
-  guidePath: string,
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task;
@@ -24,13 +26,7 @@ class HomePage extends React.Component<IProps, IState> {
     this.state = {
       nodeList: this.task.getNodeList(),
       lineList: this.task.getLineList(),
-      guidePath: '',
     }
-  }
-  onLineMoveHandler(value: GuideLinePath){
-    this.setState({
-      'guidePath': `M ${value.x1} ${value.y1} L ${value.x2} ${value.y2}`
-    })
   }
   onDrop(e: any) {
     const data = JSON.parse(e.dataTransfer.getData('cmpt-info') || 'null');
@@ -52,9 +48,10 @@ class HomePage extends React.Component<IProps, IState> {
         default:
           break;
     }
-    this.setState({
-      nodeList: this.task.getNodeList()
-    })
+    // this.setState({
+    //   nodeList: [...this.task.getNodeList()]
+    // })
+    this.props.updateNodeList(this.task.getNodeList())
   }
   ondragover(e: any) {
     e.preventDefault();
@@ -65,9 +62,9 @@ class HomePage extends React.Component<IProps, IState> {
           <DragMenu />
           <NodeList 
               task={this.task} 
-              nodeList={this.state.nodeList} 
-              onLineMove={this.onLineMoveHandler.bind(this)} />
-          <SvgMap task={this.task} lineList={this.state.lineList} guidePath={this.state.guidePath}/>
+              // nodeList={this.state.nodeList}
+               />
+          <SvgMap task={this.task} lineList={this.state.lineList} />
       </div>
     );
   }
@@ -75,4 +72,15 @@ class HomePage extends React.Component<IProps, IState> {
   
 }
 
-export default HomePage;
+const mapStateToProps = (state: ReduxState) => ({
+  
+})
+
+const mapDispatchToProps = ({
+  updateNodeList: updateNodeList,
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomePage);

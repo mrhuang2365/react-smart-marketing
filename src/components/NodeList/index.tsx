@@ -1,12 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import './index.scss'
 import { INode, ITask, } from 'src/types/task';
 import NodeInfo from  '../NodeInfo';
+import {ReduxState} from 'src/store/index'
 
 interface IProps {
   task: ITask,
   nodeList: INode[],
-  onLineMove?: Function;
 }
 interface IState{
   selectId: number,
@@ -35,9 +37,7 @@ class NodeList extends React.Component<IProps, IState>{
            return (
             <NodeInfo className={this.getClassName(node)} 
               task={this.props.task} node={node} 
-              key={index} 
-              onLineMove={this.props.onLineMove}
-              onSelect={() => this.onSelect(node)}/>
+              key={index} />
            )
           })
         }
@@ -46,4 +46,17 @@ class NodeList extends React.Component<IProps, IState>{
   }
 }
 
-export default NodeList;
+// export default NodeList;
+
+const mapStateToProps = (state: ReduxState) => ({
+  nodeList: state.nodeList
+})
+
+const mapDispatchToProps = ({
+  
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NodeList);
