@@ -1,16 +1,17 @@
 import React from 'react';
 import './index.scss'
-import { INode, ITask } from 'src/types/task';
+import { INode, ITask, } from 'src/types/task';
 import NodeInfo from  '../NodeInfo';
 
 interface IProps {
   task: ITask,
   nodeList: INode[],
+  onLineMove?: Function;
 }
 interface IState{
   selectId: number,
 }
-class WidgetList extends React.Component<IProps, IState>{
+class NodeList extends React.Component<IProps, IState>{
   constructor(props:IProps){
     super(props)
     this.state = {
@@ -35,6 +36,7 @@ class WidgetList extends React.Component<IProps, IState>{
             <NodeInfo className={this.getClassName(node)} 
               task={this.props.task} node={node} 
               key={index} 
+              onLineMove={this.props.onLineMove}
               onSelect={() => this.onSelect(node)}/>
            )
           })
@@ -44,4 +46,4 @@ class WidgetList extends React.Component<IProps, IState>{
   }
 }
 
-export default WidgetList;
+export default NodeList;

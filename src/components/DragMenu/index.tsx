@@ -17,7 +17,7 @@ interface IState{
 const DRAG_MENU = 'drag-menu';
 const DRAG_MENU_HANDLER = 'drag-menu-handler';
 
-class App extends React.Component<IProps, IState>{
+class DragMenu extends React.Component<IProps, IState>{
   constructor(props:IProps){
     super(props)
     this.state = {
@@ -69,4 +69,4 @@ class App extends React.Component<IProps, IState>{
   }
 }
 
-export default App;
+export default DragMenu;
