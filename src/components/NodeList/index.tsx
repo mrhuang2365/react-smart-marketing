@@ -9,19 +9,18 @@ import {ReduxState} from 'src/store/index'
 interface IProps {
   task: ITask,
   nodeList: INode[],
+  currentNodeId: number
 }
 interface IState{
-  selectId: number,
+  
 }
 class NodeList extends React.Component<IProps, IState>{
   constructor(props:IProps){
     super(props)
-    this.state = {
-      selectId: this.props.task.state.selectId,
-    }
+    this.state = {}
   }
   getClassName(node: INode){
-    return this.state.selectId === node.id ? 'is-select' : '';
+    return this.props.currentNodeId === node.id ? 'is-select' : '';
   }
   onSelect(node: INode){
     this.props.task.selectNode(node.id);
@@ -36,8 +35,8 @@ class NodeList extends React.Component<IProps, IState>{
           this.props.nodeList.map((node: INode, index) => {
            return (
             <NodeInfo className={this.getClassName(node)} 
-              task={this.props.task} node={node} 
-              key={index} />
+              task={this.props.task} node={node} {...node}
+              key={node.id} />
            )
           })
         }
@@ -49,7 +48,8 @@ class NodeList extends React.Component<IProps, IState>{
 // export default NodeList;
 
 const mapStateToProps = (state: ReduxState) => ({
-  nodeList: state.nodeList
+  nodeList: state.indexReducer.nodeList,
+  currentNodeId: state.indexReducer.currentNodeId
 })
 
 const mapDispatchToProps = ({
@@ -58,5 +58,5 @@ const mapDispatchToProps = ({
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  // mapDispatchToProps,
 )(NodeList);

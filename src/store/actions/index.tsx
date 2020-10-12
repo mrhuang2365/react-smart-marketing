@@ -2,7 +2,8 @@ import {GuideLinePath, INode} from 'src/types/task'
 
 export const SELECT_NODE_ID = 'SELECT_NODE_ID';
 export const UPDATE_NODE_LIST = 'UPDATE_NODE_LIST';
-// 连线
+export const UPDATE_LINE_LIST = 'UPDATE_LINE_LIST';
+
 export const ADD_LINE = 'ADD_LINE';
 export const REMOVE_LINE = 'REMOVE_LINE';
 export const SELECT_LINE_ID = 'SELECT_LINE_ID';
@@ -19,13 +20,13 @@ export function guideLineChange(path: GuideLinePath) {
     path
   };
 }
-export function selectLineId(id: number) {
+export function selectLine(id: number) {
   return {
     type: SELECT_LINE_ID,
     id
   };
 }
-export function selectNodeId(id: number) {
+export function selectNode(id: number) {
   return {
     type: SELECT_NODE_ID,
     id
@@ -34,6 +35,12 @@ export function selectNodeId(id: number) {
 export function updateNodeList(list: INode[]) {
   return {
     type: UPDATE_NODE_LIST,
+    list,
+  };
+}
+export function updateLineList(list: INode[]) {
+  return {
+    type: UPDATE_LINE_LIST,
     list,
   };
 }

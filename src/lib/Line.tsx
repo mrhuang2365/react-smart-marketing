@@ -14,18 +14,18 @@ interface ILineOptions{
  */
 export default class Line{
   id: number;
-  mId: number;
-  tId: number;
+  pId: number;
+  cId: number;
   options: ILineOptions;
   pathList: {
     d0?: string,
     d1?: string,
   };
 
-  constructor(options:ILineOptions, mId: number, tId: number,) {
+  constructor(options:ILineOptions, pId: number, cId: number,) {
     this.id = Math.random()*100 + Date.now();
-    this.mId = mId;
-    this.tId = tId;
+    this.pId = pId;
+    this.cId = cId;
     this.options = options;
     this.pathList = {};
     
@@ -246,8 +246,8 @@ export default class Line{
   // 保存
   toJson(){
     return {
-      mId:this.mId,
-      tId:this.tId,
+      pId:this.pId,
+      cId:this.cId,
     }
   }
 }

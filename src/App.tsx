@@ -7,7 +7,7 @@ import {Layout} from 'antd'
 import Home from './pages/home';
 import Edit from './pages/edit';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Content } = Layout;
 
 
 export const hashHistory = createHashHistory({ basename: '/' });

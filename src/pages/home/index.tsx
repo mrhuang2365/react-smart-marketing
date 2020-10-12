@@ -4,18 +4,20 @@ import './index.scss';
 import Task,{dragEventMode} from '../../lib/Task';
 import { INode, ILine } from 'src/types/task';
 import {ReduxState} from 'src/store/index'
-import {updateNodeList} from 'src/store/actions'
+import {updateNodeList, guideLineChange, updateLineList} from 'src/store/actions'
 
 import NodeList from '../../components/NodeList'
 import DragMenu from '../../components/DragMenu';
 import SvgMap from '../../components/SvgMap';
 
 interface IProps {
-  updateNodeList: Function
+  updateNodeList: Function,
+  guideLineChange: Function
+  updateLineList: Function
+  currentNodeId: number
+  currentLineId: number
 }
 interface IState{
-  nodeList: INode[],
-  lineList: ILine[],
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task;
@@ -23,10 +25,9 @@ class HomePage extends React.Component<IProps, IState> {
   constructor(props:IProps) {
     super(props);
     this.task = new Task();
-    this.state = {
-      nodeList: this.task.getNodeList(),
-      lineList: this.task.getLineList(),
-    }
+    this.state = {};
+
+    this.initKeyEvent()
   }
   onDrop(e: any) {
     const data = JSON.parse(e.dataTransfer.getData('cmpt-info') || 'null');
@@ -41,30 +42,62 @@ class HomePage extends React.Component<IProps, IState> {
         break;
       case dragEventMode.move:
         this.task.setNodePostion(data.id, x - offset.x, y - offset.y);
+        this.props.updateLineList(this.task.getLineList())
         break
       case dragEventMode.line:
+        this.props.guideLineChange({x1:0, x2:0, y1:0, y2:0});
         console.log('line')
         break
         default:
           break;
     }
-    // this.setState({
-    //   nodeList: [...this.task.getNodeList()]
-    // })
-    this.props.updateNodeList(this.task.getNodeList())
+    this.props.updateNodeList([...this.task.getNodeList()])
   }
   ondragover(e: any) {
     e.preventDefault();
+  }
+  removeNode() {
+    this.task.removeNode(this.props.currentNodeId);
+    this.props.updateNodeList(this.task.getNodeList());
+  }
+  removeLine() {
+    this.task.removeLineByLineId(this.props.currentLineId);
+    this.props.updateLineList(this.task.getLineList());
+  }
+  initKeyEvent(){
+    document.addEventListener('keydown', this.onKeyDownHanlderBind);
+  }
+  removeKeyEvent(){
+    document.removeEventListener('keydown', this.onKeyDownHanlderBind);
+  }
+  onKeyDownHanlderBind = this.initKeydownEvent.bind(this)
+  // 初始化键盘事件
+  initKeydownEvent(ev: any){
+    const that = this;
+    // 判断事件是否为body
+    if (ev.target.nodeName.toLocaleUpperCase() !== 'BODY') {
+      return
+    }
+    // 46:delete 键 8：backspace键
+    if ((ev.keyCode === 46) || (ev.keyCode === 8)) {
+      if (that.props.currentNodeId) {
+        that.removeNode();
+      } else if (that.props.currentLineId) {
+        that.removeLine();
+      } else {
+
+      }
+    }
+  }
+  componentWillUnmount(){
+    this.removeKeyEvent();
   }
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
           <DragMenu />
-          <NodeList 
-              task={this.task} 
-              // nodeList={this.state.nodeList}
-               />
-          <SvgMap task={this.task} lineList={this.state.lineList} />
+          <NodeList task={this.task} />
+          <SvgMap task={this.task} />
       </div>
     );
   }
@@ -73,11 +106,14 @@ class HomePage extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  
+  currentNodeId: state.indexReducer.currentNodeId,
+  currentLineId: state.indexReducer.currentLineId,
 })
 
 const mapDispatchToProps = ({
-  updateNodeList: updateNodeList,
+  updateNodeList,
+  guideLineChange,
+  updateLineList
 })
 
 export default connect(

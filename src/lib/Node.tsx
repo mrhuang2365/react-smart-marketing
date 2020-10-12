@@ -11,27 +11,59 @@ interface INodeOptions {
   widget: any;
 }
 
- export default class Node{
-    id: number;
-    name: string;
-    x: number;
-    y: number;
-    widget: any;
-    options: INodeOptions;
+export default class Node{
+  id: number;
+  name: string;
+  x: number;
+  y: number;
+  widget: any;
+  options: INodeOptions;
+  parentNodeIds: {
+    [index: number]: true
+  } = {};
+  childsNodeIds: {
+    [index: number]: true
+  } = {};
 
-   constructor(id: number, options: INodeOptions) {
-     console.log('Node， options:', options);
+  constructor(id: number, options: INodeOptions) {
+    console.log('Node， options:', options);
 
-     this.id = id;
-     this.x = options.x;
-     this.y = options.y;
-     this.options = options;
-     this.name = options.widget.name;
-     this.widget = options.widget;
-   }
+    this.id = id;
+    this.x = options.x;
+    this.y = options.y;
+    this.options = options;
+    this.name = options.widget.name;
+    this.widget = options.widget;
+  }
 
-   setPosition(x:number, y:number){
-     this.x = x;
-     this.y = y;
-   }
+  getType(){
+    return this.widget.id;
+  }
+  setName(name: string){
+    this.name = name;
+  }
+  setPosition(x:number, y:number){
+    this.x = x;
+    this.y = y;
+  }
+  // 记录父节点id
+  recordParentNodeId(id: number){
+    this.parentNodeIds[id] = true;
+  }
+  // 记录子节点id
+  recordChildsNodeId(id: number){
+    this.childsNodeIds[id] = true;
+  }
+  // 删除子节点id
+  removeChildNodeId(id: number){
+    delete this.childsNodeIds[id];
+  }
+  // 删除父节点id
+  removeParentNodeId(id: number){
+    delete this.parentNodeIds[id];
+  }
+  // 判断是否存在关系
+  nodeIdIsExist(id:number){
+    return this.parentNodeIds[id] || this.childsNodeIds[id]
+  }
  }
