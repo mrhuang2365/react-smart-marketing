@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Modal } from 'antd';
+
 import './index.scss';
 import Task,{dragEventMode} from '../../lib/Task';
 import { INode, ILine } from 'src/types/task';
 import {ReduxState} from 'src/store/index'
 import {updateNodeList, guideLineChange, updateLineList} from 'src/store/actions'
+import allWidgets from '../../widgets'
 
 import NodeList from '../../components/NodeList'
 import DragMenu from '../../components/DragMenu';
@@ -18,6 +21,9 @@ interface IProps {
   currentLineId: number
 }
 interface IState{
+  show: boolean,
+  currentComponentId: string,
+  _currentNode: null | INode
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task;
@@ -25,7 +31,11 @@ class HomePage extends React.Component<IProps, IState> {
   constructor(props:IProps) {
     super(props);
     this.task = new Task();
-    this.state = {};
+    this.state = {
+      show: false,
+      currentComponentId: '',
+      _currentNode: null,
+    };
 
     this.initKeyEvent()
   }
@@ -70,6 +80,13 @@ class HomePage extends React.Component<IProps, IState> {
   removeKeyEvent(){
     document.removeEventListener('keydown', this.onKeyDownHanlderBind);
   }
+  showComponent(node: INode){
+    this.setState({
+      _currentNode: node,
+      currentComponentId: node.getType(),
+      show: true
+    })
+  }
   onKeyDownHanlderBind = this.initKeydownEvent.bind(this)
   // 初始化键盘事件
   initKeydownEvent(ev: any){
@@ -92,12 +109,32 @@ class HomePage extends React.Component<IProps, IState> {
   componentWillUnmount(){
     this.removeKeyEvent();
   }
+  getEditComponentRender(){
+    const { currentComponentId} = this.state;
+    let EditComponent = allWidgets[currentComponentId] && allWidgets[currentComponentId].component;
+    return <EditComponent node={this.state._currentNode}/>
+  }
+  onEditComponentCancel(){
+    this.setState({
+      show: false,
+      _currentNode: null,
+    })
+  }
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
           <DragMenu />
-          <NodeList task={this.task} />
+          <NodeList task={this.task} onDoubleClick={this.showComponent.bind(this)}/>
           <SvgMap task={this.task} />
+          <Modal visible={this.state.show}
+             title={`组件编辑 (${this.state._currentNode?.id})`}
+             onOk={() => this.onEditComponentCancel()}
+             onCancel={() => this.onEditComponentCancel()}>
+            {
+              this.state.show && this.state._currentNode ?
+              this.getEditComponentRender() : ''
+            }
+          </Modal>
       </div>
     );
   }

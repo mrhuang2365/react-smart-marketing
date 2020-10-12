@@ -16,7 +16,8 @@ interface IProps {
   style?: object,
   guideLineChange: Function,
   updateLineList: Function,
-  selectNode: Function
+  selectNode: Function,
+  onDoubleClick?: Function
 }
 interface IState{
   draggable: boolean,
@@ -39,6 +40,9 @@ class NodeInfo extends React.Component<IProps, IState>{
   }
   onSelect(){
     this.props.selectNode(this.props.node.id)
+  }
+  onDoubleClick(){
+    this.props.onDoubleClick && this.props.onDoubleClick(this.props.node)
   }
   onDragStart(e: any){
     // console.log('onDragStart:', this.props.node, );
@@ -98,6 +102,7 @@ class NodeInfo extends React.Component<IProps, IState>{
       <div className={`node-content ${this.props.className}`} 
         style={this.style}
         onClick={() => this.onSelect()}
+        onDoubleClick={() => this.onDoubleClick()}
         draggable={this.state.draggable} 
         onDragStart= {(e) => this.onDragStart(e)}>
           <AppstoreOutlined className="icon" />
@@ -114,7 +119,7 @@ class NodeInfo extends React.Component<IProps, IState>{
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  // guideLinePath: state.indexReducer.guideLinePath
+  
 })
 
 const mapDispatchToProps = ({

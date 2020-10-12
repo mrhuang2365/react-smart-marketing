@@ -9,7 +9,8 @@ import {ReduxState} from 'src/store/index'
 interface IProps {
   task: ITask,
   nodeList: INode[],
-  currentNodeId: number
+  currentNodeId: number,
+  onDoubleClick?: Function,
 }
 interface IState{
   
@@ -36,6 +37,7 @@ class NodeList extends React.Component<IProps, IState>{
            return (
             <NodeInfo className={this.getClassName(node)} 
               task={this.props.task} node={node} {...node}
+              onDoubleClick={this.props.onDoubleClick}
               key={node.id} />
            )
           })

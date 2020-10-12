@@ -1,46 +1,34 @@
 import * as Cmpt1 from './Cmpt-1'
-
-let index = 0;
+import * as Start from './Start'
 
 // 记录节点对应组件
 let allWidgets: {
-  [index: string]: object
+  [index: string]: any
 } = {};
 
 function __untilWidget(widget: any){
   const {options} = widget;
-
-  const id = `cmpt_${++index}`;
-  const name = `组件${index}`;
-  const _options = {
-    ...options, id, name
-  }
+  const {id} = options;
 
   allWidgets[id] = {
-    options: _options,
+    options: options,
     component: widget.default,
   }
 
-  return {id, name}
+  return {id, name: options.name}
 }
 
 // 记录节点菜单
 export const widgetList = [
   {
-    name:'组件分类一',
+    name:'系统节点',
     childrens:[
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
+      __untilWidget(Start),
     ]
   },
   {
-    name:'组件分类二',
+    name:'组件一类',
     childrens:[
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
       __untilWidget(Cmpt1),
     ]
   },
