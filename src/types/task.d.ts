@@ -15,3 +15,14 @@ declare interface GuideLinePath {
   x2: number,
   y2: number,
 }
+
+// 组件配置
+declare interface WidgetOptions {
+  id: string,         // 组件id
+  name: string,        // 组件名称
+  icon?: any,           // 图标
+  isSystem?: boolean,   // 是否系统节点
+  max?: number,         // 能存在的个数
+  parentsMax?: number   // 父级最大连接数
+  defaultParams: any
+}

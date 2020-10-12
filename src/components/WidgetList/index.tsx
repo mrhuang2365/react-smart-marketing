@@ -1,7 +1,8 @@
 import React from 'react';
-import './index.scss'
 import { AppstoreOutlined } from '@ant-design/icons';
-import {widgetList} from '../../widgets'
+import allWidgets, {widgetList} from '../../widgets'
+
+import './index.scss'
 
 interface IProps {
   // route: string,
@@ -28,20 +29,26 @@ class WidgetList extends React.Component<IProps, IState>{
         {
           widgetList.map((item, index) => {
             return (
-              <div key={index} title={item.name}>
+              <div key={index} className="widget-list-panel">
                 <div className="item-name">
-                  <AppstoreOutlined className="icon"/>
+                  <span>
+                    {item.icon || <AppstoreOutlined className="icon" />}
+                  </span>
                   {item.name}
                 </div>
                 <div className="item-content">
                   {
                     item.childrens.map((child, _index) => {
+                      const IconCmpt = allWidgets[child.id].options.icon;
                       return (
-                        <div className="cmpt-item" key={child.id} draggable="true" 
+                        <div className="cmpt-item" key={_index} draggable="true" 
                           onDragStart= {(e) => this.onDragStart(e, child)}
                           >
-                          <AppstoreOutlined className="icon"/>
-                          <span>{child.name}</span>
+                          {
+                            IconCmpt ? IconCmpt : <AppstoreOutlined className="icon"/>
+                          }
+                          
+                          <span className="name">{child.name}</span>
                         </div>
                       )
                     })

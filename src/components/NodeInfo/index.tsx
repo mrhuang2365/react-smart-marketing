@@ -7,6 +7,8 @@ import {dragEventMode, gloablTaskConfig} from '../../lib/Task'
 import {guideLineChange, updateLineList, selectNode} from 'src/store/actions'
 import {ReduxState} from 'src/store/index'
 
+import allWidgets from '../../widgets'
+
 interface IProps {
   node: INode,
   task: ITask,
@@ -97,6 +99,11 @@ class NodeInfo extends React.Component<IProps, IState>{
       e.nativeEvent.stopImmediatePropagation();
     }
   }
+  getIconRender(){
+    const widgetId = this.props.node.getType();
+    const IconCmpt = allWidgets[widgetId].options.icon;
+    return IconCmpt? IconCmpt: <AppstoreOutlined className="icon" />
+  }
   render(){
     return (
       <div className={`node-content ${this.props.className}`} 
@@ -105,7 +112,9 @@ class NodeInfo extends React.Component<IProps, IState>{
         onDoubleClick={() => this.onDoubleClick()}
         draggable={this.state.draggable} 
         onDragStart= {(e) => this.onDragStart(e)}>
-          <AppstoreOutlined className="icon" />
+          {
+            this.getIconRender()
+          }
           <RightSquareOutlined className="line-icon"
               draggable={true} 
               onDragStart = {(e) => this.onIconDragStart(e)}

@@ -39,6 +39,13 @@ class HomePage extends React.Component<IProps, IState> {
 
     this.initKeyEvent()
   }
+  newNode(x:number, y: number, data:any) {
+    this.task.newNode(x, y, data);
+  }
+  moveNode(id:number, x: number, y: number) {
+    this.task.setNodePostion(id, x, y);
+    this.props.updateLineList(this.task.getLineList())
+  }
   onDrop(e: any) {
     const data = JSON.parse(e.dataTransfer.getData('cmpt-info') || 'null');
     const offset = JSON.parse(e.dataTransfer.getData('offset') || 'null');
@@ -48,15 +55,13 @@ class HomePage extends React.Component<IProps, IState> {
     const y = e.clientY;
     switch (mode){
       case dragEventMode.add:
-        this.task.newNode(x - 30, y - 30, data);
+        this.newNode(x - 30, y - 30, data);
         break;
       case dragEventMode.move:
-        this.task.setNodePostion(data.id, x - offset.x, y - offset.y);
-        this.props.updateLineList(this.task.getLineList())
+        this.moveNode(data.id, x - offset.x, y - offset.y);
         break
       case dragEventMode.line:
         this.props.guideLineChange({x1:0, x2:0, y1:0, y2:0});
-        console.log('line')
         break
         default:
           break;
@@ -81,10 +86,19 @@ class HomePage extends React.Component<IProps, IState> {
     document.removeEventListener('keydown', this.onKeyDownHanlderBind);
   }
   showComponent(node: INode){
+    if (node.isSystem) {
+      return
+    }
     this.setState({
       _currentNode: node,
       currentComponentId: node.getType(),
       show: true
+    })
+  }
+  onEditComponentCancel(){
+    this.setState({
+      show: false,
+      _currentNode: null,
     })
   }
   onKeyDownHanlderBind = this.initKeydownEvent.bind(this)
@@ -109,17 +123,15 @@ class HomePage extends React.Component<IProps, IState> {
   componentWillUnmount(){
     this.removeKeyEvent();
   }
+  onEditOk(){
+    this.onEditComponentCancel();
+  }
   getEditComponentRender(){
     const { currentComponentId} = this.state;
     let EditComponent = allWidgets[currentComponentId] && allWidgets[currentComponentId].component;
-    return <EditComponent node={this.state._currentNode}/>
+    return <EditComponent node={this.state._currentNode} onOk={this.onEditOk.bind(this)} onCancel={this.onEditComponentCancel.bind(this)}/>
   }
-  onEditComponentCancel(){
-    this.setState({
-      show: false,
-      _currentNode: null,
-    })
-  }
+  
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
@@ -127,8 +139,8 @@ class HomePage extends React.Component<IProps, IState> {
           <NodeList task={this.task} onDoubleClick={this.showComponent.bind(this)}/>
           <SvgMap task={this.task} />
           <Modal visible={this.state.show}
+             footer={null}
              title={`组件编辑 (${this.state._currentNode?.id})`}
-             onOk={() => this.onEditComponentCancel()}
              onCancel={() => this.onEditComponentCancel()}>
             {
               this.state.show && this.state._currentNode ?

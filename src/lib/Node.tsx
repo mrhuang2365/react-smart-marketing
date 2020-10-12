@@ -16,6 +16,7 @@ export default class Node{
   name: string;
   x: number;
   y: number;
+  isSystem: boolean = false;
   widget: any;
   options: INodeOptions;
   parentNodeIds: {
@@ -24,6 +25,7 @@ export default class Node{
   childsNodeIds: {
     [index: number]: true
   } = {};
+  params: any;
 
   constructor(id: number, options: INodeOptions) {
     console.log('Node， options:', options);
@@ -34,6 +36,8 @@ export default class Node{
     this.options = options;
     this.name = options.widget.name;
     this.widget = options.widget;
+    this.isSystem = !!options.widget.isSystem;
+    this.params = options.widget.params || {};
   }
 
   getType(){

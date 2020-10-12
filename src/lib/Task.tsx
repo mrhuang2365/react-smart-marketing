@@ -1,5 +1,6 @@
 import Node from './Node';
 import Line from './Line';
+import allWidgets from '../widgets'
 
 export const dragEventMode = {
   add: 'add',
@@ -74,6 +75,11 @@ export default class Task{
     return this.lineList;
   }
   newNode(x:number, y: number, widget: any){
+    const res = this.checkoutWidgetMax(widget)
+    if (res.result) {
+      console.log(`该节点存在数量不能大于${res.max}`)
+      return
+    }
     const node = new Node(this.getRootId(), {x, y, widget});
     this.nodeList.push(node);
     this.nodes[node.id] = node;
@@ -97,8 +103,8 @@ export default class Task{
     for(var i in this.nodes[nodeId].parentNodeIds) {
       this.nodes[i].removeChildNodeId(nodeId);
     }
-    for(var i in this.nodes[nodeId].childsNodeIds) {
-      this.nodes[i].removeParentNodeId(nodeId);
+    for(var k in this.nodes[nodeId].childsNodeIds) {
+      this.nodes[k].removeParentNodeId(nodeId);
     }
   }
   setNodePostion(id:number, x:number, y:number){
@@ -171,8 +177,8 @@ export default class Task{
      // 查找是否存在连线
      return pNode.nodeIdIsExist(pId) || cNode.nodeIdIsExist(pId);
   }
-   // 节点变更，刷新与该节点相关的连线
-   refreshLinePath(nodeId: number) {
+  // 节点变更，刷新与该节点相关的连线
+  refreshLinePath(nodeId: number) {
     const _items = this.lineList.filter((line) => (nodeId === line.pId) || (nodeId === line.cId))
     _items.map((line) => {
       const pNode = this.nodes[line.pId];
@@ -181,4 +187,14 @@ export default class Task{
       line.drawLinePath(lineOption);
     })
   }
+  // 获取组件存在数量
+  checkoutWidgetMax(widget: any){
+    const options = allWidgets[widget.id].options;
+    const _items = this.nodeList.filter((node) => node.widget.id === widget.id);
+    return {
+      result: options.max && (_items.length >= options.max),
+      max: options.max 
+    }
+  }
+
 }

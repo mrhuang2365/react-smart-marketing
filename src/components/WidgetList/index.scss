@@ -1,21 +1,27 @@
 .item-name{
-  padding: 4px;
+  padding: 4px 8px 0 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
   color:#1890ff;
 
   .icon{
     margin-right: 16px;
   }
 }
+.widget-list-panel{
+  .ant-collapse-header{
+    padding: 8px 0 14px 20px !important;
+  } 
+}
 .item-content{
   // border-top: 1px solid #ccc;
-  margin-bottom: 12px;
 
   .cmpt-item{
     margin-top: 4px;
     padding: 8px 4px;
+    display: flex;
+    align-items: center;
 
     &:hover{
       cursor: move;
@@ -26,7 +32,10 @@
     }
     
     .icon{
-      margin-right: 8px;
+      margin:0 10px 0 30px;
+    }
+    .name{
+      font-size: 12px;
     }
   }
 }
