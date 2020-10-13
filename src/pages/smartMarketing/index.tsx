@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Modal } from 'antd';
 
 import './index.scss';
-import Task,{dragEventMode} from '../../lib/Task';
+import Task,{dragEventMode} from './lib/Task';
 import { INode, ILine } from 'src/types/task';
 import {ReduxState} from 'src/store/index'
 import {updateNodeList, guideLineChange, updateLineList} from 'src/store/actions'
-import allWidgets from '../../widgets'
+import allWidgets from './widgets'
 
-import NodeList from '../../components/NodeList'
-import DragMenu from '../../components/DragMenu';
-import SvgMap from '../../components/SvgMap';
+import NodeList from './components/NodeList'
+import DragMenu from './components/DragMenu';
+import SvgMap from './components/SvgMap';
 
 interface IProps {
   updateNodeList: Function,

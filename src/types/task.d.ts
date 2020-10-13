@@ -1,6 +1,6 @@
-import Task from '../lib/Task'
-import Node from '../lib/Node'
-import Line from '../lib/Line'
+import Task from '../pages/smartMarketing/lib/Task'
+import Node from '../pages/smartMarketing/lib/Node'
+import Line from '../pages/smartMarketing/lib/Line'
 
 declare global {
   interface Window { $$task: ITask; }

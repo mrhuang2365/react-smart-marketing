@@ -4,8 +4,7 @@ import './App.css';
 import { Route, Switch, Redirect, Router} from 'react-router-dom'
 import { createHashHistory } from 'history';
 import {Layout} from 'antd'
-import Home from './pages/home';
-import Edit from './pages/edit';
+import Home from './pages/smartMarketing';
 
 const { Content } = Layout;
 
@@ -37,7 +36,6 @@ class App extends React.Component<IProps, IState>{
           <Router history={hashHistory}>
             <Switch>
               <Route path="/home" component={Home}/>
-              <Route path="/edit" component={Edit}/>
               <Redirect from="/" to="/home" />
               <Route
               render={() => {
