@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Modal } from 'antd';
+import { Modal, Button, Select, } from 'antd';
 
 import './index.scss';
 import Task,{dragEventMode} from './lib/Task';
-import { INode, ILine } from 'src/types/task';
+import { INode } from 'src/types/task';
 import {ReduxState} from 'src/store/index'
 import {updateNodeList, guideLineChange, updateLineList} from 'src/store/actions'
 import allWidgets from './widgets'
@@ -12,6 +12,10 @@ import allWidgets from './widgets'
 import NodeList from './components/NodeList'
 import DragMenu from './components/DragMenu';
 import SvgMap from './components/SvgMap';
+
+import {templateList} from './template'
+
+const { Option } = Select;
 
 interface IProps {
   updateNodeList: Function,
@@ -23,28 +27,35 @@ interface IProps {
 interface IState{
   show: boolean,
   currentComponentId: string,
-  _currentNode: null | INode
+  _currentNode: null | INode,
+  templateName: string,
 }
 class HomePage extends React.Component<IProps, IState> {
-  task: Task;
+  task: Task = new Task();
 
   constructor(props:IProps) {
     super(props);
-    this.task = new Task();
     this.state = {
       show: false,
       currentComponentId: '',
       _currentNode: null,
+      templateName: templateList[1].name
     };
 
+    this.initTask(templateList[1].json);
     this.initKeyEvent()
   }
-  newNode(x:number, y: number, data:any) {
-    this.task.newNode(x, y, data);
+  initTask(templateJson?:any){
+    this.task = new Task(templateJson);
+    this.props.updateLineList(this.task.getLineList());
+    this.props.updateNodeList(this.task.getNodeList());
   }
+  newNode(x:number, y: number, widget:any) {
+    this.task.newNode({ x, y , widget, id: 0});
+  } 
   moveNode(id:number, x: number, y: number) {
     this.task.setNodePostion(id, x, y);
-    this.props.updateLineList(this.task.getLineList())
+    this.props.updateLineList(this.task.getLineList());
   }
   onDrop(e: any) {
     const data = JSON.parse(e.dataTransfer.getData('cmpt-info') || 'null');
@@ -131,27 +142,49 @@ class HomePage extends React.Component<IProps, IState> {
     let EditComponent = allWidgets[currentComponentId] && allWidgets[currentComponentId].component;
     return <EditComponent node={this.state._currentNode} onOk={this.onEditOk.bind(this)} onCancel={this.onEditComponentCancel.bind(this)}/>
   }
-  
+  onSave(){
+    const json = this.task.save();
+    console.log('当前任务JSON', json, JSON.stringify(json));
+    localStorage.setItem('LOCAL_TASK_JSON', JSON.stringify(json));
+  }
+  onTaskChange(value:any, options:any){
+    const templateInfo:any = templateList.find((item) => item.name === value );
+    this.initTask(templateInfo.json);
+  }
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
-          <DragMenu />
-          <NodeList task={this.task} onDoubleClick={this.showComponent.bind(this)}/>
-          <SvgMap task={this.task} />
-          <Modal visible={this.state.show}
-             footer={null}
-             title={`组件编辑 (${this.state._currentNode?.id})`}
-             onCancel={() => this.onEditComponentCancel()}>
-            {
-              this.state.show && this.state._currentNode ?
-              this.getEditComponentRender() : ''
-            }
-          </Modal>
+        <div className="opreator">
+        <Select className="select"
+            onChange={(value, options) => this.onTaskChange(value, options)}
+            style={{ width: 200 }}
+            defaultValue={this.state.templateName}
+            placeholder="选择模板">
+              {
+                templateList.map((item, index) => {
+                  return (
+                    <Option value={item.name} key={index}>{item.name}</Option>
+                  )
+                })
+              }
+          </Select>
+          <Button type="primary" onClick={() => this.onSave()}>保存当前任务流</Button>
+        </div>
+        <DragMenu />
+        <NodeList task={this.task} onDoubleClick={this.showComponent.bind(this)}/>
+        <SvgMap task={this.task} />
+        <Modal visible={this.state.show}
+            footer={null}
+            title={`组件编辑 (${this.state._currentNode?.id})`}
+            onCancel={() => this.onEditComponentCancel()}>
+          {
+            this.state.show && this.state._currentNode ?
+            this.getEditComponentRender() : ''
+          }
+        </Modal>
       </div>
     );
   }
-
-  
 }
 
 const mapStateToProps = (state: ReduxState) => ({

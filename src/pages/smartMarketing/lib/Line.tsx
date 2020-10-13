@@ -36,7 +36,7 @@ export default class Line{
     const _mid = _small ? 1: 3;
 
     const midx = x1 +  (x2 - x1) / 2;
-    const midy = y1 +  (y2 - y1) / 2;
+    // const midy = y1 +  (y2 - y1) / 2;
 
     const _x1 = x2 > x1 ? midx - _dis : midx + _dis;
     const _x2 = x2 > x1 ? midx - _mid : midx + _mid;
@@ -62,7 +62,7 @@ export default class Line{
     const _mid = _small ? 1: 3;
 
     const midx = x2;
-    const midy = y1 +  (y2 - y1) / 2;
+    // const midy = y1 +  (y2 - y1) / 2;
 
     const _x1 = x2 > x1 ? midx - _dis : midx + _dis;
     const _x2 = x2 > x1 ? midx - _mid : midx + _mid;

@@ -35,8 +35,7 @@ class NodeList extends React.Component<IProps, IState>{
         { 
           this.props.nodeList.map((node: INode, index) => {
            return (
-            <NodeInfo className={this.getClassName(node)} 
-              task={this.props.task} node={node} {...node}
+            <NodeInfo className={this.getClassName(node)} node={node} {...node}
               onDoubleClick={this.props.onDoubleClick}
               key={node.id} />
            )
@@ -60,5 +59,5 @@ const mapDispatchToProps = ({
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps,
+  mapDispatchToProps,
 )(NodeList);

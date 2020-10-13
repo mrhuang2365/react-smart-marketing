@@ -3,6 +3,13 @@ import {CodeSandboxOutlined} from '@ant-design/icons'
 
 import BaseComponent from './BaseComponent/index'
 import * as Cmpt1 from './Cmpt-1'
+import * as Cmpt2 from './Cmpt-2'
+import * as Cmpt3 from './Cmpt-3'
+import * as Cmpt4 from './Cmpt-4'
+import * as Cmpt5 from './Cmpt-5'
+import * as Cmpt6 from './Cmpt-6'
+import * as Cmpt7 from './Cmpt-7'
+import * as Cmpt8 from './Cmpt-8'
 import * as Start from './Start'
 
 // 记录节点对应组件
@@ -38,15 +45,13 @@ export const widgetList = [
     ]
   },
   {
-    name:'组件一类',
+    name:'圈人节点',
     color: '#eaff8f',
     icon: <CodeSandboxOutlined className="icon" />,
     childrens:[
       __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
+      __untilWidget(Cmpt2),
+      __untilWidget(Cmpt3),
     ]
   },
   {
@@ -54,12 +59,18 @@ export const widgetList = [
     color: '#69c0ff',
     icon: <CodeSandboxOutlined className="icon" />,
     childrens:[
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
-      __untilWidget(Cmpt1),
+      __untilWidget(Cmpt4),
+      __untilWidget(Cmpt5),
+      __untilWidget(Cmpt6),
+    ]
+  },
+  {
+    name:'触达节点',
+    color: '#69c0ff',
+    icon: <CodeSandboxOutlined className="icon" />,
+    childrens:[
+      __untilWidget(Cmpt7),
+      __untilWidget(Cmpt8),
     ]
   },
 ]

@@ -1,3 +1,16 @@
+export interface NodeOptions{
+  id: number
+  x: number
+  y: number
+  type?: string
+  name?: string
+  widget: any
+  params?: any
+  isSystem?: boolean
+  parentIds?: number[]
+  childsIds?: number[]
+}
+
 /**
  * Node节点类
  * 1、构建和加载Node
@@ -5,20 +18,14 @@
  * 3、记录应用的组件以及组件的参数
  * 4、记录与其他有事件流关系的节点id（父节点与子节点的id）
  */
-interface INodeOptions {
-  x: number;
-  y: number;
-  widget: any;
-}
-
 export default class Node{
   id: number;
   name: string;
+  type: string;
   x: number;
   y: number;
   isSystem: boolean = false;
   widget: any;
-  options: INodeOptions;
   parentNodeIds: {
     [index: number]: true
   } = {};
@@ -27,21 +34,21 @@ export default class Node{
   } = {};
   params: any;
 
-  constructor(id: number, options: INodeOptions) {
+  constructor(options: NodeOptions) {
     console.log('Node， options:', options);
 
-    this.id = id;
+    this.id = options.id;
     this.x = options.x;
     this.y = options.y;
-    this.options = options;
-    this.name = options.widget.name;
+    this.type = options.type || options.widget.id;
+    this.name = options.name || options.widget.name;
     this.widget = options.widget;
-    this.isSystem = !!options.widget.isSystem;
-    this.params = options.widget.params || {};
+    this.isSystem = !!(options.isSystem || options.widget.isSystem);
+    this.params = options.params || options.widget.params || {};
   }
 
   getType(){
-    return this.widget.id;
+    return this.type;
   }
   setName(name: string){
     this.name = name;
@@ -66,8 +73,37 @@ export default class Node{
   removeParentNodeId(id: number){
     delete this.parentNodeIds[id];
   }
+  getParentIdList(){
+    let ids = [];
+    for (var i in this.parentNodeIds) {
+      ids.push(Number(i))
+    }
+    return ids;
+  }
+  getChilsIdList(){
+    let ids = [];
+    for (var i in this.childsNodeIds) {
+      ids.push(Number(i))
+    }
+    return ids;
+  }
   // 判断是否存在关系
   nodeIdIsExist(id:number){
     return this.parentNodeIds[id] || this.childsNodeIds[id]
+  }
+
+  save():NodeOptions{
+    return {
+      id: this.id,
+      x: this.x,
+      y: this.y,
+      type: this.type,
+      name: this.name,
+      widget: this.widget,
+      params: this.params,
+      isSystem: this.isSystem,
+      parentIds: this.getParentIdList(),
+      childsIds: this.getChilsIdList(),
+    }
   }
  }

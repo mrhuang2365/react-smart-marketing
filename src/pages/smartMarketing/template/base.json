@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "name": "默认名称",
+  "list": [
+    {
+      "id": 2,
+      "x": 300,
+      "y": 300,
+      "widget": {
+        "id": "cmpt-start",
+        "name": "开始",
+        "isSystem": true,
+        "params": {}
+      },
+      "name": "开始",
+      "isSystem": true,
+      "params": {},
+      "parentIds": [],
+      "childsIds": []
+    }
+  ]
+}

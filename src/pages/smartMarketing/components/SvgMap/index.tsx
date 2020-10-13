@@ -34,7 +34,7 @@ class SvgMap extends React.Component<IProps, IState>{
        {
           this.props.lineList.map((line: ILine, index) => {
            return (
-            <g key={index}  onClick={() =>  this.onSelect(line)}>
+            <g key={line.id}  onClick={() =>  this.onSelect(line)}>
               <path 
                   stroke="#868686"
                   fill="none" 

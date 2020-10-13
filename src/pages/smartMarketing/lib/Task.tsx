@@ -1,4 +1,4 @@
-import Node from './Node';
+import Node, {NodeOptions} from './Node';
 import Line from './Line';
 import allWidgets from '../widgets'
 
@@ -25,6 +25,18 @@ export const gloablTaskConfig = {
   }
 }
 
+interface TaskOptions{
+  name: string,
+  version: number,
+  list: NodeOptions[]
+}
+
+interface LinesObj {
+  [index: string]: {
+    pId: number
+    cId: number
+  }
+}
 /**
  * Task任务类
  * 1、构建和加载任务
@@ -32,6 +44,7 @@ export const gloablTaskConfig = {
  */
 export default class Task{
   rootId: number;
+  name: string;
   version: number;
   nodeList: Node[];
   lineList: Line[];
@@ -43,21 +56,23 @@ export default class Task{
   } = {};
   state: State
 
-  constructor(data?: any){
+  constructor(data?: TaskOptions){
     console.log('Task: data', data);
+    this.name = '默认名称';
     this.rootId = 1;
     this.version = 1;
     this.nodeList = [];
     this.lineList = [];
     this.nodes = {};
     this.lines = {};
-    
 
     this.state = {
       selectId: 0,
       guideLinePath:{x1:0,x2:0,y1:0,y2:0},
     };
     window.$$task = this;
+
+    this.init(data);
   }
   setState< K extends keyof State >(key: K, value: State[K]) {
     this.state[key] = value
@@ -74,13 +89,13 @@ export default class Task{
   getLineList(){
     return this.lineList;
   }
-  newNode(x:number, y: number, widget: any){
-    const res = this.checkoutWidgetMax(widget)
+  newNode(nodeInfo: NodeOptions){
+    const res = this.checkoutWidgetMax(nodeInfo.widget)
     if (res.result) {
       console.log(`该节点存在数量不能大于${res.max}`)
       return
     }
-    const node = new Node(this.getRootId(), {x, y, widget});
+    const node = new Node({ ...nodeInfo ,id: nodeInfo.id ||  this.getRootId()});
     this.nodeList.push(node);
     this.nodes[node.id] = node;
   }
@@ -149,7 +164,7 @@ export default class Task{
 
     // 给节点添加纪录
     pNode.recordChildsNodeId(tId);
-    cNode.recordChildsNodeId(mId);
+    cNode.recordParentNodeId(mId);
 
     this.lineList.push(line);
   }
@@ -185,6 +200,7 @@ export default class Task{
       const cNode = this.nodes[line.cId];
       const lineOption = this.getLineOption(pNode.x, pNode.y, cNode.x, cNode.y);
       line.drawLinePath(lineOption);
+      return line
     })
   }
   // 获取组件存在数量
@@ -196,5 +212,55 @@ export default class Task{
       max: options.max 
     }
   }
+  initLineList(liensObj: LinesObj){
+    for(var i in liensObj) {
+      const pId = liensObj[i].pId;
+      const cId = liensObj[i].cId;
+      if (this.nodes[pId] && this.nodes[cId]) {
+        this.newLine(this.nodes[pId], this.nodes[cId]);
+      }
+    }
+  }
+  init(data?: TaskOptions){
+    if (!data) return
+    this.name = data.name;
+    this.version = data.version;
 
+    const liensObj: LinesObj = {};
+    data.list.forEach((item: NodeOptions) => {
+      // 更新根id
+      this.rootId = Math.max(this.rootId, item.id);
+      // 实例化节点
+      this.newNode(item);
+
+      // 记录连线列表
+      item.parentIds && item.parentIds.forEach((id) => {
+        const cId = item.id;
+        const pId = id;
+
+        liensObj[`$${pId}$${cId}`] = {
+          pId,
+          cId
+        }
+      })
+      item.childsIds && item.childsIds.forEach((id) => {
+        const pId = item.id;
+        const cId = id;
+
+        liensObj[`$${pId}$${cId}`] = {
+          pId,
+          cId
+        }
+      })
+    })
+    // 实例化连线
+    this.initLineList(liensObj);
+  }
+  save(){
+    return {
+      version: this.version,
+      name: this.name,
+      list: this.nodeList.map((node) => node.save())
+    }
+  }
 }

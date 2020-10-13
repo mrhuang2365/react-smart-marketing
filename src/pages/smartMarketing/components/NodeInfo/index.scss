@@ -27,7 +27,7 @@
   }
 
   .icon{
-    font-size: 32px;
+    font-size: 24px;
   }
   .node-name{
     position: absolute;
@@ -42,13 +42,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // display: none;
+    display: none;
 
     font-size: 16px;
-    background-color: azure;
-
-    &:hover{
-      // font-size: 20px;
-    }
+    background-color: #1890ff;
+    padding: 2p;
+    color: white;
   }
 }

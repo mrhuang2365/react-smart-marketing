@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { AppstoreAddOutlined } from '@ant-design/icons'
 import { Input, Button } from 'antd';
 import { INode } from 'src/types/task';
 import './index.scss'
