@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Select, } from 'antd';
+import { Modal, Button, Select, Input, message} from 'antd';
 
 import './index.scss';
 import Task,{dragEventMode} from './lib/Task';
@@ -13,7 +13,7 @@ import NodeList from './components/NodeList'
 import DragMenu from './components/DragMenu';
 import SvgMap from './components/SvgMap';
 
-import {templateList} from './template'
+import {templateList, saveLocalJson} from './template/index'
 
 const { Option } = Select;
 
@@ -32,6 +32,7 @@ interface IState{
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task = new Task();
+  taskName: string = this.task.name;
 
   constructor(props:IProps) {
     super(props);
@@ -39,14 +40,15 @@ class HomePage extends React.Component<IProps, IState> {
       show: false,
       currentComponentId: '',
       _currentNode: null,
-      templateName: templateList[1].name
+      templateName: templateList[0].name,
     };
 
-    this.initTask(templateList[1].json);
+    this.initTask(templateList[0].json);
     this.initKeyEvent()
   }
   initTask(templateJson?:any){
     this.task = new Task(templateJson);
+    this.taskName = this.task.name;
     this.props.updateLineList(this.task.getLineList());
     this.props.updateNodeList(this.task.getNodeList());
   }
@@ -83,11 +85,18 @@ class HomePage extends React.Component<IProps, IState> {
     e.preventDefault();
   }
   removeNode() {
-    this.task.removeNode(this.props.currentNodeId);
+    const id = this.props.currentNodeId;
+    const node = this.task.nodes[id];
+    if (node.isSystem) {
+      message.warning('系统节点不可删除');
+      return;
+    }
+    this.task.removeNode(id);
     this.props.updateNodeList(this.task.getNodeList());
+    this.props.updateLineList(this.task.getLineList());
   }
   removeLine() {
-    this.task.removeLineByLineId(this.props.currentLineId);
+    this.task.removeLine(this.props.currentLineId);
     this.props.updateLineList(this.task.getLineList());
   }
   initKeyEvent(){
@@ -143,19 +152,21 @@ class HomePage extends React.Component<IProps, IState> {
     return <EditComponent node={this.state._currentNode} onOk={this.onEditOk.bind(this)} onCancel={this.onEditComponentCancel.bind(this)}/>
   }
   onSave(){
-    const json = this.task.save();
-    console.log('当前任务JSON', json, JSON.stringify(json));
-    localStorage.setItem('LOCAL_TASK_JSON', JSON.stringify(json));
+    saveLocalJson(this.task.save())
   }
   onTaskChange(value:any, options:any){
     const templateInfo:any = templateList.find((item) => item.name === value );
     this.initTask(templateInfo.json);
   }
+  onNameChange(e:any){
+    this.task.setName(e.target.value)
+  }
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
         <div className="opreator">
-        <Select className="select"
+          <Input defaultValue={this.taskName} onChange={this.onNameChange.bind(this)}  style={{ width: 160 }}></Input>
+          <Select className="select"
             onChange={(value, options) => this.onTaskChange(value, options)}
             style={{ width: 200 }}
             defaultValue={this.state.templateName}

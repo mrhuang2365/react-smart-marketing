@@ -53,6 +53,9 @@ export default class Node{
   setName(name: string){
     this.name = name;
   }
+  setParams(params: any){
+    this.params = params;
+  }
   setPosition(x:number, y:number){
     this.x = x;
     this.y = y;

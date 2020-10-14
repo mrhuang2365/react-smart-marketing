@@ -5,7 +5,6 @@ import { INode } from 'src/types/task';
 import './index.scss'
 
 interface IProps {
-  name: string,
   params: any,
   node: INode,
   onCancel: () => void;
@@ -15,7 +14,7 @@ interface IState{
   name: string
 }
 
-class Cmpt1  extends React.Component<IProps, IState>{
+class BaseComponent  extends React.Component<IProps, IState>{
   constructor(props:IProps){
     super(props)
     this.state = {
@@ -45,4 +44,4 @@ class Cmpt1  extends React.Component<IProps, IState>{
   }
 }
 
-export default Cmpt1;
+export default BaseComponent;

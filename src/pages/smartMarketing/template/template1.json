@@ -531,9 +531,13 @@
       "widget": {
         "id": "wechat",
         "name": "节点",
-        "params": {}
+        "params": {
+          "values": [ "小程序" ]
+        }
       },
-      "params": {},
+      "params": {
+        "values": [ "小程序" ]
+      },
       "isSystem": false,
       "parentIds": [
         24,

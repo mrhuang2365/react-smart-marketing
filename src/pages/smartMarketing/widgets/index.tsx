@@ -8,8 +8,8 @@ import * as Cmpt3 from './Cmpt-3'
 import * as Cmpt4 from './Cmpt-4'
 import * as Cmpt5 from './Cmpt-5'
 import * as Cmpt6 from './Cmpt-6'
-import * as Cmpt7 from './Cmpt-7'
-import * as Cmpt8 from './Cmpt-8'
+import * as Wechat from './Wechat'
+import * as Weibo from './Weibo'
 import * as Start from './Start'
 
 // 记录节点对应组件
@@ -69,8 +69,8 @@ export const widgetList = [
     color: '#69c0ff',
     icon: <CodeSandboxOutlined className="icon" />,
     childrens:[
-      __untilWidget(Cmpt7),
-      __untilWidget(Cmpt8),
+      __untilWidget(Wechat),
+      __untilWidget(Weibo),
     ]
   },
 ]

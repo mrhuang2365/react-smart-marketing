@@ -244,10 +244,11 @@ export default class Line{
     this.pathList = { d0,  d1 };
   }
   // 保存
-  toJson(){
+  save(){
     return {
-      pId:this.pId,
-      cId:this.cId,
+      id: this.id,
+      pId: this.pId,
+      cId: this.cId,
     }
   }
 }

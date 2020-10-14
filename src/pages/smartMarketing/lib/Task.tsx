@@ -7,6 +7,7 @@ export const dragEventMode = {
   move: 'move',
   line: 'line',
 }
+
 export declare interface GuideLinePath {
   x1: number,
   y1: number,
@@ -82,6 +83,9 @@ export default class Task{
   }
   getRootId(){
     return ++this.rootId
+  }
+  setName(name: string){
+    this.name = name;
   }
   getNodeList(){
     return this.nodeList;
@@ -174,7 +178,7 @@ export default class Task{
     this.lineList = _tmpList;
   }
   // 删除连线
-  removeLineByLineId(lineId: number){
+  removeLine(lineId: number){
     const index = this.lineList.findIndex((item) => item.id === lineId);
     const line = this.lineList[index];
     if (index >= 0){
@@ -195,12 +199,11 @@ export default class Task{
   // 节点变更，刷新与该节点相关的连线
   refreshLinePath(nodeId: number) {
     const _items = this.lineList.filter((line) => (nodeId === line.pId) || (nodeId === line.cId))
-    _items.map((line) => {
+    _items.forEach((line) => {
       const pNode = this.nodes[line.pId];
       const cNode = this.nodes[line.cId];
       const lineOption = this.getLineOption(pNode.x, pNode.y, cNode.x, cNode.y);
       line.drawLinePath(lineOption);
-      return line
     })
   }
   // 获取组件存在数量
