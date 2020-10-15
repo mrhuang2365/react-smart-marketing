@@ -43,7 +43,7 @@ const WechatCmpt = (props: IProps) => {
   return (
     <div>
       <Form>
-        <Form.Item label="节点名称" required tooltip="请输入节点名称">
+        <Form.Item label="节点名称" required>
           <Input placeholder="请输入节点名称" defaultValue={name} onChange={onChange}></Input>
         </Form.Item>
         <Form.Item  label="类型选择">
