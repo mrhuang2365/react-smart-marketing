@@ -93,16 +93,18 @@ export default class Task{
   getLineList(){
     return this.lineList;
   }
+
   newNode(nodeInfo: NodeOptions){
     const res = this.checkoutWidgetMax(nodeInfo.widget)
     if (res.result) {
       console.log(`该节点存在数量不能大于${res.max}`)
       return
     }
-    const node = new Node({ ...nodeInfo ,id: nodeInfo.id ||  this.getRootId()});
+    const node = new Node({ ...nodeInfo, id: nodeInfo.id ||  this.getRootId()});
     this.nodeList.push(node);
     this.nodes[node.id] = node;
   }
+
   // 删除节点
   removeNode(nodeId: number){
     const index = this.nodeList.findIndex((item) => item.id === nodeId);
@@ -117,6 +119,7 @@ export default class Task{
     
     delete this.nodes[nodeId]
   }
+
   // 移除记录的节点id
   removeNodeRecordIds(nodeId: number){
     for(var i in this.nodes[nodeId].parentNodeIds) {
@@ -126,6 +129,7 @@ export default class Task{
       this.nodes[k].removeParentNodeId(nodeId);
     }
   }
+
   setNodePostion(id:number, x:number, y:number){
     if (!id || typeof(this.nodes[id]) === 'undefined') {
       return new Error('参数无效')
@@ -133,6 +137,7 @@ export default class Task{
     this.nodes[id].setPosition(x, y);
     this.refreshLinePath(id);
   }
+
   selectNode(id:number) {
     console.log('Task, seleccNode ==> id:', id)
     this.state.selectId = id;

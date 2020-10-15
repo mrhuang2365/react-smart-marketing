@@ -12,17 +12,16 @@ interface IState{
 
 }
 class WidgetList extends React.Component<IProps, IState>{
-  constructor(props:IProps){
+  public constructor(props:IProps){
     super(props)
-    this.state = {
-
-    }
   }
+
   onDragStart(e: any, cmpt: object){
     console.log('onDragStart:', cmpt, e);
     e.dataTransfer.setData('cmpt-info', JSON.stringify(cmpt));
     e.dataTransfer.setData('mode', 'add');
   }
+
   render(){
     return (
       <div className='Widget-list'>

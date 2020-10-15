@@ -31,7 +31,17 @@ export default class Line{
     
     this.drawLinePath(options);
   }
-  getNomalLine(x1:number,y1:number,x2:number,y2:number, _small?:boolean){
+  // 多段直线连线
+  getStraightLine(x1:number, y1:number, x2:number, y2:number){
+    const midx = x1 +  (x2 - x1) / 2;
+    // const midy = y1 +  (y2 - y1) / 2;
+
+    return `
+      M ${x1} ${y1} L ${midx} ${y1} L ${midx} ${y2} L ${x2} ${y2} 
+    `;
+  }
+  // 多段直线+两次平滑弯曲
+  getNomalLine(x1:number, y1:number, x2:number, y2:number, _small?:boolean){
     const _dis = _small ? 1.2: 6;
     const _mid = _small ? 1: 3;
 
@@ -57,7 +67,8 @@ export default class Line{
     L ${x2} ${y2}
     `;
   }
-  getQuirkLine(x1:number,y1:number,x2:number,y2:number, _small?:boolean){
+  // 多段直线+一次平滑弯曲
+  getQuirkLine(x1:number, y1:number,x2:number, y2:number, _small?:boolean){
     const _dis = _small ? 2: 6;
     const _mid = _small ? 1: 3;
 
@@ -83,19 +94,14 @@ export default class Line{
    */
   drawLinePath(options:ILineOptions){
     this.options = options;
-
-    const x1 = options.x1;
-    const y1 = options.y1;
-    const x2 = options.x2;
-    const y2 = options.y2;
-    const w = options.w;
-    const h = options.h;
+    const {x1, y1, x2, y2, w, h} = options;
     
     let startX = x1;
     let startY = y1;
     let endX = x2;
     let endY = y2;
 
+    const dixW = 10;
     const a_l = 8;    // 箭头的长度
     const a_h = 4;    // 箭头的单侧高度
     let a_direct= 'left'; // 箭头的方向
@@ -128,7 +134,7 @@ export default class Line{
       a_direct = 'left';
     }
     // 正下
-    else if ((y2 > y1) && (absX < w /1.5)) {
+    else if ((y2 > y1) && (absX < w / 1.5)) {
       startX = x1 + w/2;
       startY = y1 + h;
       endX = startX;
@@ -147,7 +153,7 @@ export default class Line{
       a_direct = 'right';
     }
     // 正右下
-    else if ((x2 > x1) && (absX < (w+10)) && ( y2>y1)) {
+    else if ((x2 > x1) && (absX < (w + dixW)) && ( y2>y1)) {
       startX = x1 + w;
       startY = y1 + h / 2;
       endX = x2 + w / 2;
@@ -156,7 +162,7 @@ export default class Line{
       a_direct = 'bottom';
     }
     // 正左下
-    else if ((x2 < x1) && (absX < (w+10)) && (y2 > y1)) {
+    else if ((x2 < x1) && (absX < (w + dixW)) && (y2 > y1)) {
       startX = x1;
       startY = y1 + h / 2;
       endX = x2 + w / 2;
@@ -165,7 +171,7 @@ export default class Line{
       a_direct = 'bottom';
     }
     // 正左上
-    else if ((x2 < x1) && (absX < (w+10)) && (y1 > y2)) {
+    else if ((x2 < x1) && (absX < (w + dixW)) && (y1 > y2)) {
       startX = x1;
       startY = y1 + h / 2;
       endX = x2 + w / 2;
@@ -174,7 +180,7 @@ export default class Line{
       a_direct = 'top';
     }
     // 正右上
-    else if ((x2 > x1) && (absX < (w+10)) && (y1 > y2)) {
+    else if ((x2 > x1) && (absX < (w + dixW)) && (y1 > y2)) {
       startX = x1 + w;
       startY = y1 + h / 2;
       endX = x2 + w / 2;
@@ -221,9 +227,11 @@ export default class Line{
     // 线条路径绘制
     if (_quirkMode) {
       d0 = this.getQuirkLine(startX, startY, endX, endY);
+      // d0 = this.getStraightLine(startX, startY, endX, endY);
     }
     else if (_normalStatus) {
       d0 = this.getNomalLine(startX, startY, endX, endY);
+      // d0 = this.getStraightLine(startX, startY, endX, endY);
     } 
     // 正左和正右做特殊处理
     else if ((a_direct === 'right' || a_direct === 'left') && (absY > 1.5)) {
@@ -242,6 +250,10 @@ export default class Line{
       d1 = `M ${endX} ${endY} L ${endX - a_h } ${endY - a_l} L ${endX} ${endY - a_l + 2} L ${endX + a_h } ${endY - a_l} z`
     }
     this.pathList = { d0,  d1 };
+  }
+  getPath(){
+    const { d0, d1 } = this.pathList;
+    return `${d0} ${d1}`
   }
   // 保存
   save(){

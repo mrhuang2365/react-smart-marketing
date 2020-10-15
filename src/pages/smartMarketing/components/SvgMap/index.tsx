@@ -56,6 +56,25 @@ class SvgMap extends React.Component<IProps, IState>{
         <path className="guideLine" 
         d={this.getGuideLinePath(this.props.guideLinePath)} 
         ></path>
+        
+        {/* <path 
+          stroke="#868686"
+          strokeOpacity="1" fill="none"
+          pointerEvents="visibleStroke" 
+          fillOpacity="1" 
+          className={`line selected`}
+          style={{strokeWidth:0.8}}
+          d="M 200 200 Q 350 500 500 200"></path> */}
+          {/* <path 
+          stroke="#868686"
+          strokeOpacity="1" fill="none"
+          pointerEvents="visibleStroke" 
+          fillOpacity="1" 
+          className={`line selected`}
+          style={{strokeWidth:0.8}}
+          d="M 300 400 C 320 450 380 450 400 300"></path> */}
+
+        {/* <path d="M300 300 C 300 300, 320 320, 600 300" stroke="black" fill="transparent"/> */}
      </svg>
     );
   }

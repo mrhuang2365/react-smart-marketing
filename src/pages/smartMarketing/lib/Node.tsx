@@ -35,8 +35,7 @@ export default class Node{
   params: any;
 
   constructor(options: NodeOptions) {
-    console.log('Node， options:', options);
-
+    // console.log('Node， options:', options);
     this.id = options.id;
     this.x = options.x;
     this.y = options.y;

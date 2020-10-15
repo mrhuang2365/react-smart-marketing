@@ -29,18 +29,20 @@ interface IState{
   currentComponentId: string,
   _currentNode: null | INode,
   templateName: string,
+  defaultTaskName: string,
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task = new Task();
-  taskName: string = this.task.name;
 
   constructor(props:IProps) {
     super(props);
+    const name = templateList[0].name;
     this.state = {
       show: false,
       currentComponentId: '',
       _currentNode: null,
-      templateName: templateList[0].name,
+      templateName: name ,
+      defaultTaskName: name
     };
 
     this.initTask(templateList[0].json);
@@ -48,13 +50,14 @@ class HomePage extends React.Component<IProps, IState> {
   }
   initTask(templateJson?:any){
     this.task = new Task(templateJson);
-    this.taskName = this.task.name;
     this.props.updateLineList(this.task.getLineList());
     this.props.updateNodeList(this.task.getNodeList());
   }
+
   newNode(x:number, y: number, widget:any) {
     this.task.newNode({ x, y , widget, id: 0});
   } 
+  
   moveNode(id:number, x: number, y: number) {
     this.task.setNodePostion(id, x, y);
     this.props.updateLineList(this.task.getLineList());
@@ -157,15 +160,22 @@ class HomePage extends React.Component<IProps, IState> {
   onTaskChange(value:any, options:any){
     const templateInfo:any = templateList.find((item) => item.name === value );
     this.initTask(templateInfo.json);
+    this.setState({
+      defaultTaskName: this.task.name
+    })
   }
   onNameChange(e:any){
-    this.task.setName(e.target.value)
+    const name = e.target.value;
+    this.task.setName(name)
+    this.setState({
+      defaultTaskName: name
+    })
   }
   render(){
     return (
       <div className="home-page drag-page-root" onDrop={(e) => this.onDrop(e)} onDragOver={this.ondragover}>
         <div className="opreator">
-          <Input defaultValue={this.taskName} onChange={this.onNameChange.bind(this)}  style={{ width: 160 }}></Input>
+          <Input value={this.state.defaultTaskName} onChange={this.onNameChange.bind(this)}  style={{ width: 160 }}></Input>
           <Select className="select"
             onChange={(value, options) => this.onTaskChange(value, options)}
             style={{ width: 200 }}
