@@ -13,7 +13,7 @@ import NodeList from './components/NodeList'
 import DragMenu from './components/DragMenu';
 import SvgMap from './components/SvgMap';
 
-import {templateList, saveLocalJson} from './template/index'
+import {getLocalTemplateList, saveLocalJson} from './template/index'
 
 const { Option } = Select;
 
@@ -26,18 +26,21 @@ interface IProps {
 }
 interface IState{
   show: boolean,
-  currentComponentId: string,
-  _currentNode: null | INode,
-  templateName: string,
-  defaultTaskName: string,
+  currentComponentId: string
+  _currentNode: null | INode
+  templateName: string
+  defaultTaskName: string
+  templateList: any[]
 }
 class HomePage extends React.Component<IProps, IState> {
   task: Task = new Task();
 
   constructor(props:IProps) {
     super(props);
+    const templateList = getLocalTemplateList();
     const name = templateList[0].name;
     this.state = {
+      templateList,
       show: false,
       currentComponentId: '',
       _currentNode: null,
@@ -155,10 +158,14 @@ class HomePage extends React.Component<IProps, IState> {
     return <EditComponent node={this.state._currentNode} onOk={this.onEditOk.bind(this)} onCancel={this.onEditComponentCancel.bind(this)}/>
   }
   onSave(){
-    saveLocalJson(this.task.save())
+    saveLocalJson(this.task.save());
+    message.info('保存成功');
+    this.setState({
+      templateList: getLocalTemplateList()
+    })
   }
   onTaskChange(value:any, options:any){
-    const templateInfo:any = templateList.find((item) => item.name === value );
+    const templateInfo:any = this.state.templateList.find((item) => item.name === value );
     this.initTask(templateInfo.json);
     this.setState({
       defaultTaskName: this.task.name
@@ -182,7 +189,7 @@ class HomePage extends React.Component<IProps, IState> {
             defaultValue={this.state.templateName}
             placeholder="选择模板">
               {
-                templateList.map((item, index) => {
+                this.state.templateList.map((item, index) => {
                   return (
                     <Option value={item.name} key={index}>{item.name}</Option>
                   )
